@@ -1,0 +1,10 @@
+.agents
+AGENTS.md
+docs
+.next
+coverage
+node_modules
+playwright-report
+test-results
+tests/e2e/.auth
+package-lock.json
