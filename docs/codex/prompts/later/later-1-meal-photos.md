@@ -1,5 +1,7 @@
 # Phase 04b: Meal photos
 
+> **Deferred in the lean plan (2026-10-26).** Written before phases were merged: references to old phase numbers map as 03 Onboarding, 04 Plan + groceries, 05 Week + learning. Leftovers, pantry, cook mode, and the weekly auto-draft were cut from the MVP; re-add them deliberately if this prompt depends on them. Ask Claude to refresh this prompt before running it.
+
 **Branch:** `phase-04b-meal-photos`
 **Read first:** `AGENTS.md`, `docs/ARCHITECTURE.md` section 9 (all of it), `docs/design/REFERENCES.md` (photo style notes), `docs/ROADMAP.md` Phase 04b. Look at `docs/design/references/a-10-plan-home-top.png` for how photos sit in meal cards.
 **Skills:** `supabase`, `vercel-react-best-practices`, `next-dev-loop`.

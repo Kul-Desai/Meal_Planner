@@ -1,5 +1,7 @@
 # Phase 08: Design pass
 
+> **Deferred in the lean plan (2026-10-26).** Written before phases were merged: references to old phase numbers map as 03 Onboarding, 04 Plan + groceries, 05 Week + learning. Leftovers, pantry, cook mode, and the weekly auto-draft were cut from the MVP; re-add them deliberately if this prompt depends on them. Ask Claude to refresh this prompt before running it.
+
 **Branch:** `phase-08-design`
 **Read first:** `AGENTS.md`, `docs/DESIGN.md` (including the Brief), `docs/design/REFERENCES.md` (what to take and skip from each screenshot), every image in `docs/design/references/`, `docs/PRODUCT.md`.
 **Skills:** `frontend-design` (lead), `shadcn`, `web-design-guidelines`, `next-dev-loop`.

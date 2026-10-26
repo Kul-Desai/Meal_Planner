@@ -1,5 +1,7 @@
 # Phase 09: Installable app and reminders
 
+> **Deferred in the lean plan (2026-10-26).** Written before phases were merged: references to old phase numbers map as 03 Onboarding, 04 Plan + groceries, 05 Week + learning. Leftovers, pantry, cook mode, and the weekly auto-draft were cut from the MVP; re-add them deliberately if this prompt depends on them. Ask Claude to refresh this prompt before running it.
+
 **Branch:** `phase-09-pwa-reminders`
 **Read first:** `AGENTS.md`, `docs/DISTRIBUTION.md` section 2, the Next.js PWA guide in `node_modules/next/dist/docs/`, `docs/ROADMAP.md` Phase 09.
 **Skills:** `vercel-react-best-practices`, `next-dev-loop`.

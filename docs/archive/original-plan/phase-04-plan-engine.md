@@ -1,3 +1,5 @@
+> **Superseded by the lean plan (2026-10-26).** Kept for reference only. Do not execute.
+
 # Phase 04: Plan engine
 
 **Branch:** `phase-04-plan-engine`
