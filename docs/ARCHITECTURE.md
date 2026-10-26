@@ -120,7 +120,7 @@ recipes                  AI-generated or seeded; owned by user or global
   user_id null (null = global seed), title, summary, minutes, base_servings,
   cuisine, mood_tag text (one of the mood tags), tags text[],
   steps jsonb (array of strings), protein_options text[],
-  source ('seed'|'ai'), fingerprint (normalized title for dedupe)
+  source ('seed'|'ai'), fingerprint (normalized title; unique per owner for dedupe)
 
 recipe_images            shared photo cache, one per dish fingerprint (read-only to users)
   fingerprint unique, imagekit_file_id, url, prompt, model,

@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap;
-select plan(55);
+select plan(60);
 
 insert into auth.users (
   id, instance_id, aud, role, email, encrypted_password,
@@ -9,13 +9,21 @@ insert into auth.users (
 )
 values
   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-a@meal-planner.test', '', now(), '{}', '{}', now(), now()),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-b@meal-planner.test', '', now(), '{}', '{}', now(), now());
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-b@meal-planner.test', '', now(), '{}', '{}', now(), now()),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-delete@meal-planner.test', '', now(), '{}', '{}', now(), now());
 
 insert into public.recipes (id, user_id, title, summary, minutes, base_servings, cuisine, mood_tag, steps, source, fingerprint)
 values (
   '10000000-0000-0000-0000-000000000002',
   'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
   'Private B recipe', 'A private recipe for RLS coverage.', 30, 2, 'Test', 'speedy', '["Cook"]', 'ai', 'private-b-recipe'
+);
+
+insert into public.recipes (id, user_id, title, summary, minutes, base_servings, cuisine, mood_tag, steps, source, fingerprint)
+values (
+  '10000000-0000-0000-0000-000000000003',
+  'cccccccc-cccc-cccc-cccc-cccccccccccc',
+  'Private deletion recipe', 'A private recipe for cascade-delete coverage.', 30, 2, 'Test', 'speedy', '["Cook"]', 'ai', 'private-delete-recipe'
 );
 
 insert into public.recipe_ingredients (id, recipe_id, ingredient_id, quantity, unit)
@@ -29,17 +37,20 @@ insert into public.meal_plans (id, user_id, start_date, days, household_size)
 values
   ('30000000-0000-0000-0000-000000000001', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', current_date, 5, 2),
   ('30000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', current_date, 5, 2),
-  ('30000000-0000-0000-0000-000000000003', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', current_date + 7, 5, 2);
+  ('30000000-0000-0000-0000-000000000003', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', current_date + 7, 5, 2),
+  ('30000000-0000-0000-0000-000000000004', 'cccccccc-cccc-cccc-cccc-cccccccccccc', current_date, 5, 2);
 
 insert into public.plan_meals (id, plan_id, user_id, date, recipe_id, servings)
 values
   ('40000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', current_date, (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta'), 2),
-  ('40000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', current_date, '10000000-0000-0000-0000-000000000002', 2);
+  ('40000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', current_date, '10000000-0000-0000-0000-000000000002', 2),
+  ('40000000-0000-0000-0000-000000000003', '30000000-0000-0000-0000-000000000004', 'cccccccc-cccc-cccc-cccc-cccccccccccc', current_date, '10000000-0000-0000-0000-000000000003', 2);
 
 insert into public.grocery_lists (id, plan_id, user_id)
 values
   ('50000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
-  ('50000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+  ('50000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'),
+  ('50000000-0000-0000-0000-000000000003', '30000000-0000-0000-0000-000000000004', 'cccccccc-cccc-cccc-cccc-cccccccccccc');
 
 insert into public.grocery_items (id, list_id, user_id, display_name, category, source)
 values
@@ -52,7 +63,8 @@ values ('70000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbb
 insert into public.meal_feedback (id, user_id, recipe_id, plan_meal_id, rating)
 values
   ('80000000-0000-0000-0000-000000000001', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta'), '40000000-0000-0000-0000-000000000001', 'fine'),
-  ('80000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '10000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000002', 'loved');
+  ('80000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '10000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000002', 'loved'),
+  ('80000000-0000-0000-0000-000000000003', 'cccccccc-cccc-cccc-cccc-cccccccccccc', '10000000-0000-0000-0000-000000000003', '40000000-0000-0000-0000-000000000003', 'fine');
 
 insert into public.ai_generations (id, user_id, kind, model, ok)
 values ('90000000-0000-0000-0000-000000000002', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'plan', 'test', true);
@@ -84,6 +96,18 @@ begin
 end;
 $$;
 
+select is(pg_temp.rls_affected_rows($$delete from auth.users where id = 'cccccccc-cccc-cccc-cccc-cccccccccccc'$$), 1::bigint, 'deleting a user with a private recipe and plan succeeds');
+select is(
+  (select count(*) from auth.users where id = 'cccccccc-cccc-cccc-cccc-cccccccccccc')
+  + (select count(*) from public.recipes where user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc')
+  + (select count(*) from public.meal_plans where user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc')
+  + (select count(*) from public.plan_meals where user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc')
+  + (select count(*) from public.grocery_lists where user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc')
+  + (select count(*) from public.meal_feedback where user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc'),
+  0::bigint,
+  'deleting a user removes the private recipe, plan, meals, grocery list, and feedback'
+);
+
 set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', true);
@@ -111,6 +135,7 @@ select is(pg_temp.rls_sqlstate($$insert into public.grocery_items (list_id, user
 select is(pg_temp.rls_sqlstate($$insert into public.pantry_items (user_id, ingredient_id) values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', (select id from public.ingredients where name = 'onion'))$$), '42501', 'A cannot create a pantry item for B');
 select is(pg_temp.rls_sqlstate($$insert into public.meal_feedback (user_id, recipe_id, plan_meal_id, rating) values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '10000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000002', 'fine')$$), '42501', 'A cannot create feedback for B');
 select is(pg_temp.rls_sqlstate($$insert into public.ai_generations (user_id, kind, model, ok) values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'plan', 'test', true)$$), '42501', 'A cannot create a generation log for B');
+select is(pg_temp.rls_sqlstate($$insert into public.recipes (user_id, title, summary, minutes, base_servings, cuisine, mood_tag, steps, source, fingerprint) values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Same title as seed', 'Owner-scoped fingerprint coverage.', 30, 2, 'Test', 'speedy', '["Cook"]', 'ai', 'chickpea-spinach-pasta')$$), '00000', 'A can reuse a global recipe fingerprint');
 
 select is(pg_temp.rls_affected_rows($$update public.profiles set display_name = 'changed' where user_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'$$), 0::bigint, 'A cannot update B profile');
 select is(pg_temp.rls_affected_rows($$update public.preferences set household_size = 3 where user_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'$$), 0::bigint, 'A cannot update B preferences');
@@ -135,14 +160,16 @@ select is(pg_temp.rls_affected_rows($$delete from public.grocery_items where id 
 select is(pg_temp.rls_affected_rows($$delete from public.pantry_items where id = '70000000-0000-0000-0000-000000000002'$$), 0::bigint, 'A cannot delete B pantry item');
 select is(pg_temp.rls_affected_rows($$delete from public.meal_feedback where id = '80000000-0000-0000-0000-000000000002'$$), 0::bigint, 'A cannot delete B feedback');
 select is(pg_temp.rls_affected_rows($$delete from public.ai_generations where id = '90000000-0000-0000-0000-000000000002'$$), 0::bigint, 'A cannot delete B generation log');
+select is(pg_temp.rls_affected_rows($$delete from public.profiles where user_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'$$), 0::bigint, 'A cannot delete own profile');
+select is(pg_temp.rls_affected_rows($$delete from public.preferences where user_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'$$), 0::bigint, 'A cannot delete own preferences');
 
-select is(pg_temp.rls_sqlstate($$insert into public.plan_meals (plan_id, user_id, date, recipe_id, servings) values ('30000000-0000-0000-0000-000000000002', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', current_date + 1, (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta'), 2)$$), '42501', 'A cannot attach a plan meal to B plan');
+select is(pg_temp.rls_sqlstate($$insert into public.plan_meals (plan_id, user_id, date, recipe_id, servings) values ('30000000-0000-0000-0000-000000000002', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', current_date + 1, (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta' and user_id is null), 2)$$), '42501', 'A cannot attach a plan meal to B plan');
 select is(pg_temp.rls_sqlstate($$update public.plan_meals set plan_id = '30000000-0000-0000-0000-000000000002' where id = '40000000-0000-0000-0000-000000000001'$$), '42501', 'A cannot move a plan meal to B plan');
 select is(pg_temp.rls_sqlstate($$insert into public.grocery_lists (plan_id, user_id) values ('30000000-0000-0000-0000-000000000003', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')$$), '23503', 'A cannot attach a grocery list to B plan');
 select is(pg_temp.rls_sqlstate($$update public.grocery_lists set plan_id = '30000000-0000-0000-0000-000000000003' where id = '50000000-0000-0000-0000-000000000001'$$), '23503', 'A cannot move a grocery list to B plan');
 select is(pg_temp.rls_sqlstate($$insert into public.grocery_items (list_id, user_id, display_name, category, source) values ('50000000-0000-0000-0000-000000000002', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'cross-owner item', 'produce', 'manual')$$), '23503', 'A cannot attach a grocery item to B list');
 select is(pg_temp.rls_sqlstate($$update public.grocery_items set list_id = '50000000-0000-0000-0000-000000000002' where id = '60000000-0000-0000-0000-000000000001'$$), '23503', 'A cannot move a grocery item to B list');
-select is(pg_temp.rls_sqlstate($$insert into public.meal_feedback (user_id, recipe_id, plan_meal_id, rating) values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta'), '40000000-0000-0000-0000-000000000002', 'fine')$$), '42501', 'A cannot attach feedback to B plan meal');
+select is(pg_temp.rls_sqlstate($$insert into public.meal_feedback (user_id, recipe_id, plan_meal_id, rating) values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', (select id from public.recipes where fingerprint = 'chickpea-spinach-pasta' and user_id is null), '40000000-0000-0000-0000-000000000002', 'fine')$$), '42501', 'A cannot attach feedback to B plan meal');
 select is(pg_temp.rls_sqlstate($$update public.meal_feedback set plan_meal_id = '40000000-0000-0000-0000-000000000002' where id = '80000000-0000-0000-0000-000000000001'$$), '42501', 'A cannot move feedback to B plan meal');
 select is(pg_temp.rls_sqlstate($$insert into public.plan_meals (plan_id, user_id, date, recipe_id, servings) values ('30000000-0000-0000-0000-000000000001', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', current_date + 2, '10000000-0000-0000-0000-000000000002', 2)$$), '42501', 'A cannot attach B private recipe to A plan');
 select is(pg_temp.rls_sqlstate($$insert into public.ingredients (name, category, default_unit) values ('unauthorized ingredient', 'produce', 'each')$$), '42501', 'A cannot write ingredients');

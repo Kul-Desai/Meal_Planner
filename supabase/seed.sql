@@ -189,7 +189,7 @@ values
   ('Chickpea curry', 'Golden chickpea and spinach curry.', 30, 2, 'Indian', 'gut_friendly', '{vegetarian}', '["Bloom spices.","Simmer chickpeas and coconut milk.","Add spinach."]', '{}', 'seed', 'chickpea-curry'),
   ('Caprese grilled cheese', 'Tomato, basil, and mozzarella toasted sandwiches.', 15, 2, 'Italian', 'speedy', '{vegetarian}', '["Layer bread, mozzarella, and tomato.","Toast in butter.","Finish with basil."]', '{}', 'seed', 'caprese-grilled-cheese'),
   ('Sesame noodle bowls', 'Tofu and crisp vegetables with sesame noodles.', 20, 2, 'Chinese', 'fakeaway', '{vegetarian}', '["Cook rice noodles.","Crisp tofu.","Toss with sesame sauce and vegetables."]', '{tofu}', 'seed', 'sesame-noodle-bowls')
-on conflict (fingerprint) do update
+on conflict (user_id, fingerprint) do update
 set title = excluded.title,
     summary = excluded.summary,
     minutes = excluded.minutes,
