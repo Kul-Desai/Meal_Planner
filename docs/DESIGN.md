@@ -1,23 +1,24 @@
 # Design
 
-Status: **not started** (Phase 08). Until then, Codex uses shadcn defaults and semantic tokens only, so the whole app can be reskinned by editing tokens.
+Status: **references collected and reviewed** (2026-10-26). See `design/REFERENCES.md` for what we take and skip from each screenshot. Styling work happens in Phase 08. Until then, Codex uses shadcn defaults and semantic tokens only, so the whole app can be reskinned by editing tokens.
 
 ## Workflow
 
 1. **Collect references (you).** Save 8 to 15 Dribbble shots into `docs/design/references/` as images, named by what you like about each: `ref-01-tonight-card-layout.png`, `ref-02-grocery-checklist.png`. Search terms that work: "meal planner app", "recipe app mobile", "grocery list app", "food delivery dashboard", "weekly planner mobile". Treat shots as inspiration for layout, density, and mood, not something to copy; the final design must be our own.
 2. **Write the brief (you, 10 minutes).** Fill in the "Brief" section below: three words for the feel, who it is for, and one thing it must never look like.
-3. **Design plan (Codex with `frontend-design` skill).** Codex reads the references and brief, proposes a token system (4 to 6 named colors, type families and scale, radius, spacing, motion) and ASCII wireframes for Today, Plan, Groceries. It reviews its own plan against the brief and revises anything generic.
+3. **Design plan (Codex with `frontend-design` skill).** Codex reads the references and brief, proposes a token system (4 to 6 named colors, type families and scale, radius, spacing, motion) and ASCII wireframes for Plan home, Tonight view, Groceries. It reviews its own plan against the brief and revises anything generic.
 4. **Approve (you, with Claude).** Share the plan; we pick and adjust.
 5. **Apply (Codex with `shadcn` + `frontend-design`).** Update tokens in `globals.css`, adjust components, restyle screens one at a time, screenshot at 375px and 1280px.
 6. **Review (Codex with `web-design-guidelines`, then Claude).** Accessibility and UX audit, then fix.
 
 ## Brief (fill in before Phase 08)
 
-- Feel in three words:
+- Feel in three words: playful, light, fresh
+- **Theme (decided 2026-10-26): keep App A's playful, light lime green look.** Light warm off-white background, white cards, lime green as the primary color (buttons, progress, selected states, active nav), pastel mood-tag chips, bold lowercase headings, emoji icons, overhead food photos. Phase 08 refines this theme (exact shades, contrast, type, spacing, dark mode); it does not replace it.
 - Audience reminder: busy people cooking weeknight dinners for 1 to 6 people.
-- The single memorable element (for example, the "tonight" card, the week strip, the grocery checklist):
-- Must never look like:
-- Light/dark: both, following system setting.
+- The single memorable element (draft): the week of photo meal cards, with the Tonight card as the first thing you see
+- Must never look like: a calorie tracker or a medical app; a generic SaaS dashboard
+- Light/dark: light is the primary experience; dark mode follows the system setting and keeps the lime accent.
 - Ideas to borrow from the Good Idea Solar site build (layout patterns, component structure, Codex prompt style):
 
 ## Things the design must get right

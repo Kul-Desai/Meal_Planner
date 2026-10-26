@@ -9,13 +9,14 @@ Each phase is one Codex task on its own branch, ending in a pull request you rev
 | 02 | Database and security | Codex | All tables, RLS, seed data, generated types, RLS tests |
 | 03 | Onboarding | Codex | Four questions saved; settings can edit them |
 | 04 | Plan engine | Codex | AI drafts a valid plan; swap one night; lock in |
+| 04b | Meal photos | Codex | AI-generated photos per dish, cached in ImageKit, shown on cards |
 | 05 | Grocery list | Codex | Correct combined list with check-off and sharing |
 | 06 | During the week | Codex | Tonight view, swap tonight, leftovers tips |
-| 07 | Learning and recurring | Codex | Feedback, favorites, draft next week, weekly auto-draft |
+| 07 | Learning and recurring | Codex | Feedback, Meals tab, draft next week, weekly auto-draft |
 | 08 | Design pass | You + Codex | Dribbble references -> tokens -> polished UI |
 | 09 | Installable app and reminders | Codex | PWA install, offline list, email and push reminders |
 | 10 | Launch readiness | You + Codex | Production project, domain, legal pages, account deletion, monitoring |
-| 11 | Google Play | You + Codex | TWA build, closed test, production listing |
+| 11 | ~~Google Play~~ | Dropped | Not planned (decided 2026-10-26) |
 | 12 | iOS (optional) | Later | Capacitor app with native value |
 
 MVP = phases 00 to 07 (usable product with neutral styling). Public launch = through 10.
@@ -29,8 +30,8 @@ Follow `docs/README.md` Step 0.
 ## Phase 01: Foundation and auth
 **Done when:**
 - Sign in with email (magic link or code) and Google; sign out; session persists across refresh.
-- Signed-out users visiting `/today`, `/plan`, `/groceries`, `/settings` are redirected to `/login`.
-- App shell: bottom nav on mobile (Today, Plan, Groceries, Settings), sidebar on desktop.
+- Signed-out users visiting `/plan`, `/today`, `/groceries`, `/meals`, `/settings` are redirected to `/login`.
+- App shell: bottom nav on mobile (Plan, Groceries, Meals, Settings), sidebar on desktop; `/plan` is home.
 - `src/lib/env.ts` validates env vars; `.env.example` committed.
 - Vitest and Playwright configured with one passing test each; GitHub Actions runs lint, typecheck, test, build on every PR.
 
@@ -44,8 +45,8 @@ Follow `docs/README.md` Step 0.
 
 ## Phase 03: Onboarding
 **Done when:**
-- New users land on `/onboarding`; four steps with defaults; back/next; progress indicator.
-- Confirmation screen restates choices in plain words.
+- New users land on `/onboarding`; eight one-question steps (mood, days, people, diet, allergies, proteins, dislikes, time) with defaults; back arrow; progress bar; Continue disabled until valid.
+- Summary screen restates choices in plain words.
 - Data saved to `preferences`; `onboarding_completed_at` set; returning users skip onboarding.
 - `/settings` edits the same preferences.
 
@@ -53,11 +54,18 @@ Follow `docs/README.md` Step 0.
 **Done when:**
 - "Plan my week" creates a draft with the right number of nights from the chosen start date.
 - Works fully with `AI_PROVIDER=mock`, and with a real provider when a key is set.
-- Constraint checker unit tests cover allergies, diet flags, dislikes, time limits, night count; a planted violation is caught and that night is regenerated.
+- Constraint checker unit tests cover allergies, diet, unliked proteins, dislikes, time limits, cooking days; a planted violation is caught and that night is regenerated.
 - Plan screen shows each night, protein choice picker, shared ingredients summary.
 - Swap one night with a reason changes only that night.
 - "Lock in plan" sets status to locked.
 - Rate limits enforced; generations logged.
+
+## Phase 04b: Meal photos
+**Done when:**
+- New recipes get a photo generated in the locked style, uploaded to ImageKit, and cached in `recipe_images` by fingerprint (a second user with the same dish triggers no new generation).
+- Seed recipes have photos (`npm run images:seed`).
+- Cards show a placeholder until the photo is ready, then a resized ImageKit image; no layout shift.
+- Daily cap enforced and logged; mock mode uses bundled sample photos and makes no API calls.
 
 ## Phase 05: Grocery list
 **Done when:**
@@ -68,7 +76,7 @@ Follow `docs/README.md` Step 0.
 
 ## Phase 06: During the week
 **Done when:**
-- `/today` shows tonight's dinner with steps and ingredients; empty states for "no plan" and "plan ended".
+- Tonight card on `/plan` opens `/today` with tonight's dinner, steps, and ingredients; empty states for "no plan" and "plan ended".
 - "Swap tonight" with reasons (missing ingredient, plans changed, want quicker) works and updates the list.
 - Mark tonight cooked or skipped; skipped meal ingredients are flagged as possible leftovers.
 - Leftover tip shows when a later meal can use something left over.
@@ -76,7 +84,7 @@ Follow `docs/README.md` Step 0.
 ## Phase 07: Learning and recurring
 **Done when:**
 - After a meal date passes, a one-tap feedback prompt appears (Loved it / It was fine / Not again).
-- `/favorites` lists loved meals and the "not again" list, both editable.
+- `/meals` lists loved meals, the "not again" list (both editable), and past meals.
 - "Draft next week" uses preferences + feedback; unit test proves "not again" meals are excluded and loved meals are included in the prompt context.
 - Weekly auto-draft cron route (secured with `CRON_SECRET`) drafts plans for users who opted in.
 
@@ -89,5 +97,5 @@ Follow `docs/README.md` Step 0.
 ## Phase 10: Launch readiness
 **Done when:** production Supabase project with migrations applied; Vercel production env vars set; custom domain; privacy policy and terms; data export and account deletion (in-app and a public web page); Sentry and PostHog wired; landing page with "Get the app" section.
 
-## Phase 11: Google Play
-**Done when:** `assetlinks.json` served; Bubblewrap/PWABuilder project builds a signed `.aab`; closed test running with 12+ testers for 14 consecutive days; store listing assets ready; production access requested.
+## Phase 11: Google Play (dropped)
+Not planned. Android users install the PWA from the website (Phase 09). The old prompt is kept in `docs/archive/` in case this is revisited.

@@ -20,6 +20,7 @@ A signed-in user sees an empty but working app shell; signed-out users can only 
 2. **shadcn/ui**
    - Initialize shadcn (neutral base, CSS variables). Add: button, input, label, card, form, dialog, sheet, dropdown-menu, sonner (toasts), skeleton, separator, avatar, badge, tabs, checkbox, radio-group, select, textarea.
    - Light and dark mode following system preference.
+   - Provisional theme tokens so the app already feels like the chosen direction (App A, playful and light): `--primary` a lime green with readable foreground text, `--background` a light warm off-white, cards white, larger radius on buttons (pill) and cards. Only change token values in `globals.css`; final values come in Phase 08.
 
 3. **Supabase clients** (follow the `supabase` skill and `ARCHITECTURE.md` section 3 exactly)
    - `src/lib/supabase/client.ts`, `server.ts`, `proxy.ts` helper, and `src/proxy.ts` exporting `proxy`.
@@ -29,14 +30,14 @@ A signed-in user sees an empty but working app shell; signed-out users can only 
    - `/login`: email field that sends a magic link / one-time code, plus "Continue with Google".
    - `/auth/callback` route handler exchanges the code for a session; `/auth/confirm` handles email OTP links.
    - Sign out in the user menu.
-   - After sign in, redirect to `/today` (onboarding redirect comes in Phase 03).
+   - After sign in, redirect to `/plan` (onboarding redirect comes in Phase 03).
    - Write the exact Google Cloud + Supabase dashboard steps for Google OAuth into `docs/PROGRESS.md` under "Human must do".
 
 5. **App shell** in `src/app/(app)/layout.tsx`
-   - Mobile (<768px): top bar with app name and user menu; bottom nav with Today, Plan, Groceries, Settings (icons + labels).
+   - Mobile (<768px): top bar with app name and user menu; bottom nav with Plan, Groceries, Meals, Settings (icons + labels). `/plan` is the home screen.
    - Desktop: left sidebar with the same items.
-   - Placeholder pages for `/today`, `/plan`, `/groceries`, `/settings`, `/favorites` with a heading and an empty state.
-   - Simple landing page at `/` for signed-out users (headline, one paragraph, "Get started" button). Signed-in users visiting `/` go to `/today`.
+   - Placeholder pages for `/plan`, `/today`, `/groceries`, `/meals`, `/settings` with a heading and an empty state (`/today` is not in the nav; it opens from the Tonight card later).
+   - Simple landing page at `/` for signed-out users (headline, one paragraph, "Get started" button). Signed-in users visiting `/` go to `/plan`.
    - Placeholder `/privacy` and `/terms` pages.
 
 6. **Testing and CI**

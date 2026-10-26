@@ -17,11 +17,12 @@ The complete data model exists in the dev project with Row Level Security, seed 
    - Tables from section 4 with foreign keys, `on delete cascade` where user-owned, indexes listed in section 4.
    - `updated_at` trigger where the table has `updated_at`.
    - RLS enabled on every table. User-owned tables: select/insert/update/delete only where `auth.uid() = user_id` (use `(select auth.uid())` form for performance per the skill). `ingredients` and global `recipes` (`user_id is null`) readable by authenticated users, writable by no one except the service role.
-   - Trigger on `auth.users` insert that creates `profiles` and `preferences` rows with defaults (5 days, household 2, 45 minutes weekday, 60 weekend).
+   - Trigger on `auth.users` insert that creates `profiles` and `preferences` rows with defaults (cooking days Mon to Fri, household 2, diet none, all proteins liked, no mood tags, 45 minutes weekday, 60 weekend).
 
 3. **Seed** (`supabase/seed.sql`, also applied to dev):
    - About 150 ingredients: canonical name, aliases, category (Produce, Protein, Dairy and eggs, Bakery, Pantry, Frozen, Other), default unit, allergens (peanut, tree_nut, dairy, egg, gluten, shellfish, fish, soy, sesame), diet tags (meat, poultry, pork, beef, fish, shellfish, dairy, egg, gluten).
-   - About 30 global recipes with ingredients and steps: at least 10 vegetarian, 8 poultry, 4 fish, 12 under 30 minutes, varied cuisines (American, Mexican, Italian, Indian, Chinese, Mediterranean). These are the fallback when AI output fails constraints.
+   - About 30 global recipes with ingredients and steps: at least 10 vegetarian, 8 poultry, 4 fish, 12 under 30 minutes, varied cuisines (American, Mexican, Italian, Indian, Chinese, Mediterranean), each with one `mood_tag`, and every mood tag covered by at least 3 recipes. These are the fallback when AI output fails constraints.
+   - `recipe_images` is readable by authenticated users and writable only by the service role.
 
 4. **Types:** generate `src/lib/supabase/database.types.ts`, wire it into the Supabase clients, add helper types (`Tables<'meal_plans'>` etc.).
 

@@ -10,7 +10,7 @@ This folder is the plan for the whole build. Codex builds; Claude directs and re
 | `PRODUCT.md` | What the app does, screen by screen |
 | `ARCHITECTURE.md` | Stack, folders, data model, AI pipeline, grocery engine, media |
 | `ROADMAP.md` | Phases 00 to 12 with "done when" checklists |
-| `DISTRIBUTION.md` | Web, desktop install, Google Play, iOS |
+| `DISTRIBUTION.md` | Web, installable app on desktop and phone, iOS (optional) |
 | `DESIGN.md` | Dribbble + `frontend-design` workflow (Phase 08) |
 | `PROGRESS.md` | Running log Codex updates after each phase |
 | `codex/AGENTS.template.md` | Rules for Codex; becomes the root `AGENTS.md` in Step 0 |
@@ -125,7 +125,7 @@ If Codex gets stuck or goes in circles: stop it, copy the error and what it trie
 |-------|---------|
 | 01 | Google Cloud OAuth client for Google sign-in (Codex will list exact steps) |
 | 04 | An LLM API key (OpenAI or Anthropic) with a small spend limit set |
+| 04b | ImageKit account (free) and image model access on your LLM provider |
 | 08 | 8 to 15 Dribbble references saved in `docs/design/references/` and the brief in `DESIGN.md` |
 | 09 | Resend account (email) |
 | 10 | Domain name; Sentry and PostHog accounts |
-| 11 | Google Play developer account ($25) and 12 testers |

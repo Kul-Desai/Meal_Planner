@@ -14,7 +14,7 @@ Instructions for Codex (and any coding agent) working in this repo. Read this fi
 
 ## What we are building
 
-A meal planner web app (desktop and mobile, later installable and on Google Play). Users sign in, answer four onboarding questions (days to plan, household size, dietary rules, time budget), get an AI-drafted dinner plan whose nights share ingredients, swap any single night, lock the plan in, and get one combined grocery list. During the week the app shows tonight's dinner, handles swaps and leftovers, and learns from feedback so next week's plan starts closer to what the user likes.
+A meal planner web app (desktop and mobile, later installable as a PWA from the website; no app store listings for now). Users sign in, answer four onboarding questions (days to plan, household size, dietary rules, time budget), get an AI-drafted dinner plan whose nights share ingredients, swap any single night, lock the plan in, and get one combined grocery list. During the week the app shows tonight's dinner, handles swaps and leftovers, and learns from feedback so next week's plan starts closer to what the user likes.
 
 ## Read before you code
 
@@ -51,6 +51,13 @@ npm run db:types     # regenerate src/lib/supabase/database.types.ts
 ```
 
 If a script is missing, add it to `package.json` in the phase that needs it.
+
+## Next.js 16.4 settings in this repo
+
+`next.config.ts` has `cacheComponents: true`, `partialPrefetching: true`, and `reactCompiler: true` (create-next-app defaults). Keep them on. Most screens here are per-user and read cookies through Supabase, so:
+- Put per-user data reads inside components wrapped in `<Suspense>` with a meaningful fallback (skeleton), keeping a static shell (nav, headings) outside.
+- Never add `"use cache"` to anything that reads cookies, the session, or user data.
+- When Next.js shows an Instant Insights error (blocking route), read the linked docs page and choose Stream, Cache, or Block deliberately; note the choice in `docs/PROGRESS.md`.
 
 ## Skills installed in `.agents/skills`
 
@@ -98,6 +105,7 @@ The Supabase MCP server is connected to the **development project only**.
 - Every AI result passes `src/lib/plan/constraints.ts` before it is saved or shown. Allergies and diet rules are hard constraints enforced in code, never trusted to the model.
 - `AI_PROVIDER=mock` must always work: deterministic fixture output, no network. Tests and CI use mock.
 - Log every generation to `ai_generations` and enforce the per-user daily limits.
+- Meal photos: generated only on the server in `src/lib/images/`, using the locked style prompt in `prompt.ts`, cached by recipe fingerprint in `recipe_images`, uploaded to ImageKit, and capped per day. Never generate images from the client or per user view.
 
 **Grocery list**
 - Aggregation, unit conversion, and leftover subtraction are deterministic code in `src/lib/groceries/`. Never use an LLM for this. Cover with unit tests.

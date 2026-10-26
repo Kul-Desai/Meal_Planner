@@ -9,7 +9,7 @@ During an active week the app is useful every evening: it shows tonight's dinner
 
 ## Tasks
 
-1. **Today view** (`/today`, the default landing page during an active plan)
+1. **Tonight card + Tonight view.** Wire the Tonight card on `/plan` (meal name, photo, minutes, "Start cooking"), and build `/today` (opened from the card)
    - Tonight's meal: title, minutes, servings, protein choice, ingredients checklist, numbered prep steps (large readable type), "Cook mode" toggle that keeps the screen awake via the Wake Lock API where supported.
    - Tomorrow preview (one line).
    - States: no plan ("Plan your week" CTA), draft not locked ("Lock in your plan"), plan ended ("Draft next week" placeholder until Phase 07), tonight skipped.

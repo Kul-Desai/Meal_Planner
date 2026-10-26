@@ -14,8 +14,8 @@ The app remembers what worked. Next week's plan starts closer to what the user l
    - `src/actions/feedback.ts`: upsert `meal_feedback`.
    - "Not again" asks: "Is there an ingredient you want to avoid?" and offers to add it to dislikes.
 
-2. **Favorites** (`/favorites`)
-   - Loved meals (tap to view recipe, "Add to next week"), and "Not again" list (with Undo).
+2. **Meals tab** (`/meals`)
+   - Loved meals (tap to view recipe, "Add to next week"), "Not again" list (with Undo), and past meals by week.
 
 3. **Context for planning** (`src/lib/plan/context.ts`)
    - Up to 10 loved recipes (most recent first), all "not again" titles, last 14 days of meals to avoid repeats, pinned "add to next week" meals.
@@ -30,7 +30,7 @@ The app remembers what worked. Next week's plan starts closer to what the user l
    - Schedule it with Vercel Cron (`vercel.json`) daily; document in `PROGRESS.md`. (Supabase `pg_cron` + `pg_net` calling the route is the alternative; explain the trade-off briefly.)
    - Notification is a placeholder log line until Phase 09.
 
-6. **Tests:** context unit tests; route test for auth rejection; Playwright: give feedback -> appears in favorites.
+6. **Tests:** context unit tests; route test for auth rejection; Playwright: give feedback -> appears on the Meals tab.
 
 ## Acceptance
 `docs/ROADMAP.md` Phase 07 "Done when". This completes the MVP.

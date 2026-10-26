@@ -1,3 +1,5 @@
+> **Dropped 2026-10-26.** Kept for reference only. Do not execute.
+
 # Phase 11: Google Play (Trusted Web Activity)
 
 **Branch:** `phase-11-google-play`
