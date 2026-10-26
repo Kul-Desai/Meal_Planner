@@ -4,8 +4,8 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 
 ## Current status
 
-- Current phase: **01 Foundation and auth**
-- Last merged phase: **00 Setup** (2026-10-26)
+- Current phase: **02 Database and security** (ready for review)
+- Last merged phase: **01 Foundation and auth** (2026-10-26)
 - Blockers: none
 
 ## Human to-do (keys, dashboards, decisions)
@@ -31,8 +31,23 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 | 2026-10-26 | App is free; no trial or payments | Validate usefulness first |
 | 2026-10-26 | Skip health questions (sex, weight, activity, medical) | Out of scope; avoids storing health data |
 | 2026-10-26 | Nav: Plan (home), Groceries, Meals, Settings; Tonight is a card on Plan | Matches reference layout |
+| 2026-10-26 | Lean plan: Phases 03 Onboarding, 04 Plan + groceries, 05 Week + learning = MVP; photos, PWA/reminders, design polish, launch moved to Later; leftovers, pantry, cook mode, auto-draft deferred | Faster path to a usable app |
+| 2026-10-26 | Design as you build (no separate design phase); Codex plans once then builds, Claude reviews at phase end | Fewer rounds and stops |
 
 ## Phase entries
+
+### Phase 02: Database and security (2026-10-26)
+**Branch:** `phase-02-database`
+**Built:** Development schema with 13 RLS-protected tables, six stable-status enums, text/check-constrained evolving vocabularies, `updated_at` triggers, ownership and foreign-key indexes, and a security-definer Auth sign-up trigger. Composite owner foreign keys prevent cross-user attachment for plans, lists, grocery items, and feedback; recipe references are separately restricted to global or owned recipes. Seeded 150 global ingredients and 30 global recipes. Generated typed Supabase database types and table helpers, and added a project-ref-based pgTAP script.
+**Files touched (main ones):** `supabase/migrations/`, `supabase/seed.sql`, `supabase/tests/rls_user_isolation.sql`, `src/lib/supabase/database.types.ts`, `src/lib/supabase/types.ts`, Supabase client helpers, `package.json`.
+**New dependencies:** none.
+**Decisions:** User-owned child tables use composite foreign keys with the owner ID, in addition to owner RLS, as defense in depth. `meal_feedback` uses `(plan_meal_id, user_id)` only so swapping a meal does not invalidate existing feedback; its `recipe_id` remains a normal FK and is policy-checked. `ai_generations` is append-only for signed-in users' own non-null-user rows; null-user system rows are service-role-only for the Phase 04b image pipeline. The `rls_auto_enable()` event-trigger function and sign-up trigger are not executable by `PUBLIC`, `anon`, or `authenticated`.
+**Verification:** `npm run db:test` passed 55 pgTAP assertions in a transaction and rolled back; it covers user A's read/insert/update/delete isolation from user B across every user-owned table, all cross-owner parent attachments, private-recipe attachment, ingredient writes, and null-user generation logs. Persisted dev seed verified at 150 ingredients and 30 global recipes with zero retained test users. Supabase security advisor reports only the accepted Auth-dashboard leaked-password warning. Performance advisor reports no missing foreign-key indexes; its remaining unused-index notices are expected immediately after schema creation.
+**Known issues / follow-ups:** Leaked-password protection is disabled in Supabase Auth. This is an accepted non-blocking dashboard warning because Phase 01 uses email links and Google sign-in; enable it when the plan/tier supports it. `db:test` intentionally targets the connected development project and must never be pointed at production.
+**Manual test steps:**
+1. Run `npm run db:test`; confirm the command exits successfully and reports the final pgTAP assertion (`ok 55`).
+2. In Supabase Studio for the development project, verify the ingredient count is 150 and the global-recipe count is 30.
+3. In the Auth dashboard, review the leaked-password-protection warning and leave it documented as accepted for the passwordless Phase 01 flow.
 
 ### Phase 01: Foundation and auth (2026-10-26)
 **Branch:** `phase-01-foundation`
