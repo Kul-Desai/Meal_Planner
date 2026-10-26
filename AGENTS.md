@@ -97,7 +97,7 @@ The Supabase MCP server is connected to the **development project only**.
 - Use only `@supabase/ssr` helpers in `src/lib/supabase/`. Cookies use only `getAll`/`setAll`.
 - `src/proxy.ts` refreshes sessions; it is not authorization. Check the user again in every server action and protected page.
 - Every table has RLS enabled with explicit policies. No table is ever left without RLS.
-- The secret key is used only in `src/lib/supabase/admin.ts` (guarded by `import "server-only"`), and that module may be imported only by: (1) cron routes in `src/app/api/cron/`, (2) the account deletion server action (Phase 10).
+- The secret key is used only in `src/lib/supabase/admin.ts` (guarded by `import "server-only"`), and that module may be imported only by: (1) cron routes in `src/app/api/cron/`, (2) the account deletion server action (Phase 10), (3) the meal photo pipeline in `src/lib/images/` (Phase 04b), only to write `recipe_images` and system rows (`user_id` null) in `ai_generations`.
 - Test-only exception: Playwright global setup in `tests/e2e/` may create its own admin client to provision a test user. It reads `SUPABASE_SECRET_KEY` from `.env.local` (or a CI secret), refuses to run unless `NEXT_PUBLIC_SUPABASE_URL` matches the dev project, and is never imported by anything in `src/`. In CI, authenticated e2e tests run only when that secret is configured; otherwise they are skipped with a clear message.
 
 **AI**
@@ -111,8 +111,9 @@ The Supabase MCP server is connected to the **development project only**.
 **Grocery list**
 - Aggregation, unit conversion, and leftover subtraction are deterministic code in `src/lib/groceries/`. Never use an LLM for this. Cover with unit tests.
 
-**UI (until the design phase)**
-- Use shadcn defaults and semantic tokens (`bg-background`, `text-foreground`, `bg-primary`, etc.). No hard-coded hex colors or arbitrary color values, so the design pass can reskin by changing tokens.
+**UI (design as you build)**
+- Every UI phase builds screens in the chosen direction: App A's playful, light, lime green style (`docs/design/REFERENCES.md`, `docs/DESIGN.md`). Use the `frontend-design` skill for visual decisions.
+- Semantic tokens only (`bg-background`, `text-foreground`, `bg-primary`, mood tag tokens, etc.). No hard-coded hex colors or arbitrary color values in components.
 - Mobile first. Check every screen at 375px and 1280px wide.
 - Accessible by default: labels on inputs, visible focus, buttons are `<button>`, color is never the only signal.
 - Interface copy follows `docs/PRODUCT.md`: plain words, sentence case, action-named buttons ("Lock in plan", "Swap this night").
@@ -121,7 +122,7 @@ The Supabase MCP server is connected to the **development project only**.
 
 1. Read `docs/PROGRESS.md` and the phase prompt you were given.
 2. Create a branch `phase-XX-short-name` from `main`.
-3. Make a short plan (list of files to create/change) before writing code.
+3. Show one short plan (files to create/change, any data-model gaps) and wait for approval once. After approval, build without stopping for small decisions; record each in `docs/PROGRESS.md` under Decisions. Stop only for items in "Ask before you" or when blocked.
 4. Build in small commits with clear messages.
 5. Before you say you are done, all of these pass: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`. For UI work, verify in the browser with `next-dev-loop` at mobile and desktop widths.
 6. Update `docs/PROGRESS.md`: what you built, files touched, new dependencies (with reason), decisions, known issues, and anything the human must do (keys, dashboard settings).

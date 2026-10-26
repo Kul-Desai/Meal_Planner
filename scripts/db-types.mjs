@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
+import { format } from "prettier";
 
 const result = spawnSync(
   "supabase",
@@ -27,5 +28,9 @@ if (result.error || result.status !== 0) {
   process.exit(result.status || 1);
 }
 
-writeFileSync("src/lib/supabase/database.types.ts", result.stdout);
+const formattedTypes = await format(result.stdout, {
+  filepath: "src/lib/supabase/database.types.ts",
+});
+
+writeFileSync("src/lib/supabase/database.types.ts", formattedTypes);
 process.stdout.write("Wrote src/lib/supabase/database.types.ts\n");

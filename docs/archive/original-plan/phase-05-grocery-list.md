@@ -1,3 +1,5 @@
+> **Superseded by the lean plan (2026-10-26).** Kept for reference only. Do not execute.
+
 # Phase 05: Grocery list
 
 **Branch:** `phase-05-grocery-list`

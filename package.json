@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "db:test": "supabase db query --linked --project-ref ptvdczmwkwqkxlintzri --file supabase/tests/rls_user_isolation.sql --output-format json",
     "db:types": "node scripts/db-types.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

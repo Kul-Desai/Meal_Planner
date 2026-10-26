@@ -1,5 +1,7 @@
 # Phase 10: Launch readiness
 
+> **Deferred in the lean plan (2026-10-26).** Written before phases were merged: references to old phase numbers map as 03 Onboarding, 04 Plan + groceries, 05 Week + learning. Leftovers, pantry, cook mode, and the weekly auto-draft were cut from the MVP; re-add them deliberately if this prompt depends on them. Ask Claude to refresh this prompt before running it.
+
 **Branch:** `phase-10-launch`
 **Read first:** `AGENTS.md`, `docs/DISTRIBUTION.md`, `docs/ROADMAP.md` Phase 10.
 **Skills:** `supabase`, `supabase-postgres-best-practices`, `web-design-guidelines`.

@@ -51,7 +51,7 @@ src/
       client.ts              # createBrowserClient
       server.ts              # createServerClient with await cookies()
       proxy.ts               # session refresh helper used by src/proxy.ts
-      admin.ts               # secret-key client, server-only; cron routes + account deletion only
+      admin.ts               # secret-key client, server-only; cron routes, account deletion, photo pipeline only
     ai/
       provider.ts            # picks model from env; "mock" provider for dev/tests
       schemas.ts             # Zod schemas for AI output
@@ -120,7 +120,7 @@ recipes                  AI-generated or seeded; owned by user or global
   user_id null (null = global seed), title, summary, minutes, base_servings,
   cuisine, mood_tag text (one of the mood tags), tags text[],
   steps jsonb (array of strings), protein_options text[],
-  source ('seed'|'ai'), fingerprint (normalized title for dedupe)
+  source ('seed'|'ai'), fingerprint (normalized title; unique per owner for dedupe)
 
 recipe_images            shared photo cache, one per dish fingerprint (read-only to users)
   fingerprint unique, imagekit_file_id, url, prompt, model,
@@ -241,8 +241,8 @@ aggregate(meals, { pantry, haveAtHome }) -> GroceryItem[]
 1. Flatten all ingredients of all planned (not skipped) meals; apply the chosen protein option.
 2. Normalize units: volume to ml, weight to g, count stays count. Known conversions only; never guess a density.
 3. Group by `ingredient_id` + unit family; sum quantities.
-4. Subtract leftovers: if night A `makesLeftover` X and night B `usesLeftover` X, B's X is not purchased (A's recipe already includes the extra).
-5. Drop pantry `always_have` items into a collapsed "Check you have" group instead of the main list.
+4. *(Deferred in the lean plan)* Subtract leftovers: if night A `makesLeftover` X and night B `usesLeftover` X, B's X is not purchased (A's recipe already includes the extra).
+5. *(Deferred in the lean plan)* Drop pantry `always_have` items into a collapsed "Check you have" group instead of the main list.
 6. Convert back to friendly units (for example 900 g chicken -> "about 2 lb" for US locale), round up to sensible shopping sizes.
 7. Sort by category order: Produce, Protein, Dairy and eggs, Bakery, Pantry, Frozen, Other.
 
@@ -284,7 +284,7 @@ VAPID_PUBLIC_KEY= / VAPID_PRIVATE_KEY=   # push phase
 
 `src/lib/env.ts` validates these with Zod at startup and fails loudly with a clear message.
 
-## 9. Media strategy (decided 2026-10-26: AI-generated photos, cached in ImageKit)
+## 9. Media strategy (decided 2026-10-26: AI-generated photos, cached in ImageKit; scheduled as Later 1, MVP uses colored placeholders)
 
 Meal cards show an overhead food photo. Photos are generated once per dish and shared by every user who gets that dish, so cost grows with the number of distinct dishes, not with users.
 

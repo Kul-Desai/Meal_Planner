@@ -1,3 +1,5 @@
+> **Superseded by the lean plan (2026-10-26).** Kept for reference only. Do not execute.
+
 # Phase 06: During the week
 
 **Branch:** `phase-06-during-the-week`

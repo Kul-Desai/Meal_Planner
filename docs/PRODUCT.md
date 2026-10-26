@@ -53,7 +53,7 @@ Reminders are not asked during onboarding; they are opt-in from Settings (Phase 
 
 ### 3. Draft plan
 - Generated for the chosen number of days starting from the chosen date, dinner only for v1.
-- Each night is a card: day pill, **food photo**, meal title, one-line description, a colored **mood tag** (from the user's picks), total minutes, servings, and which ingredients it shares with other nights.
+- Each night is a card: day pill, **photo slot** (colored placeholder now; AI food photo in Later 1), meal title, one-line description, a colored **mood tag** (from the user's picks), total minutes, servings, and which ingredients it shares with other nights.
 - Plan home header: greeting with first name ("Good morning, Chef KD"), plan date range, and two summary cards side by side: **Tonight** (what's for dinner) and **Grocery list** (items bought / total).
 - Some meals offer a protein choice ("chicken, tofu, or paneer, you pick one"). The user's pick is saved on that night.
 - A summary line lists the shared ingredients that keep shopping short.
@@ -66,14 +66,14 @@ Reminders are not asked during onboarding; they are opt-in from Settings (Phase 
 
 ### 5. Lock in and grocery list
 - Locking in turns the plan into a grocery list grouped by store section (Produce, Protein, Dairy and eggs, Pantry, Bakery, Frozen, Other).
-- Quantities are combined and scaled to household size; items the user marked as already at home are subtracted; planned leftovers (for example extra rice cooked Monday for Thursday's fried rice) are accounted for.
-- User can check items off, add their own items, remove items, mark "already have it", and copy or share the list as text.
+- Quantities are combined and scaled to household size, with the chosen protein applied.
+- User can check items off, add their own items, remove items, and copy or share the list as text.
+- *Deferred (lean plan):* subtracting planned leftovers, pantry staples, and "already have it".
 
 ### 6. During the week
 - **Tonight card** at the top of the Plan home; tapping it opens the **Tonight view** (`/today`): what's for dinner tonight, quick prep steps, ingredients, time, cook mode.
 - **Swap tonight** if plans change or an ingredient is missing. The grocery list updates if the list is still open.
-- **Leftover help:** suggest what to do with leftovers ("You have half a cabbage left: add it to Friday's soup").
-- **Reminders:** optional daily reminder of tonight's dinner (email first, push notification once the app is installable).
+- *Deferred (lean plan):* leftover suggestions, cook mode, and daily dinner reminders (Later 2).
 
 ### 7. Feedback and learning
 - After a meal's date passes, ask a one-tap question: Loved it / It was fine / Not again.
@@ -82,7 +82,7 @@ Reminders are not asked during onboarding; they are opt-in from Settings (Phase 
 
 ### 8. Recurring plans
 - "Draft next week" builds a new plan from saved preferences and feedback. The user approves or swaps a night.
-- Optional auto-draft: every week on the user's chosen day, the next plan is drafted and the user is notified.
+- *Deferred (lean plan):* automatic weekly drafting.
 
 ## Example output (target quality)
 
@@ -99,8 +99,8 @@ Reminders are not asked during onboarding; they are opt-in from Settings (Phase 
 
 ## Scope
 
-### v1 (MVP, ship this first)
-- Auth, onboarding, draft plan, swap a night, lock in, grocery list, tonight view, feedback, draft next week, settings.
+### v1 (MVP, lean plan: Phases 03 to 05)
+- Auth, onboarding, draft plan, swap a night, lock in, grocery list, tonight view, feedback, Meals tab, draft next week, settings.
 - Dinner only.
 - Responsive web app that works well on phone and desktop browsers.
 

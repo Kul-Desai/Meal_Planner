@@ -9,12 +9,12 @@ This folder is the plan for the whole build. Codex builds; Claude directs and re
 | `README.md` | This guide: setup and the loop you repeat for every phase |
 | `PRODUCT.md` | What the app does, screen by screen |
 | `ARCHITECTURE.md` | Stack, folders, data model, AI pipeline, grocery engine, media |
-| `ROADMAP.md` | Phases 00 to 12 with "done when" checklists |
+| `ROADMAP.md` | Lean plan: Phases 00 to 05 plus a Later list, with "done when" checklists |
 | `DISTRIBUTION.md` | Web, installable app on desktop and phone, iOS (optional) |
 | `DESIGN.md` | Dribbble + `frontend-design` workflow (Phase 08) |
 | `PROGRESS.md` | Running log Codex updates after each phase |
 | `codex/AGENTS.template.md` | Rules for Codex; becomes the root `AGENTS.md` in Step 0 |
-| `codex/prompts/phase-XX-*.md` | The exact prompt for each Codex phase |
+| `codex/prompts/phase-XX-*.md` | The exact prompt for each Codex phase (`later/` holds deferred ones) |
 
 ---
 
@@ -123,9 +123,10 @@ If Codex gets stuck or goes in circles: stop it, copy the error and what it trie
 
 | Phase | You need |
 |-------|---------|
-| 01 | Google Cloud OAuth client for Google sign-in (Codex will list exact steps) |
+| 03 | Nothing new |
 | 04 | An LLM API key (OpenAI or Anthropic) with a small spend limit set |
-| 04b | ImageKit account (free) and image model access on your LLM provider |
-| 08 | 8 to 15 Dribbble references saved in `docs/design/references/` and the brief in `DESIGN.md` |
-| 09 | Resend account (email) |
-| 10 | Domain name; Sentry and PostHog accounts |
+| 05 | Nothing new |
+| Later 1 | ImageKit account (free) and image model access |
+| Later 2 | Resend account; a domain helps |
+| Later 4 | Domain name; Sentry and PostHog accounts |
+| Anytime | Google Cloud OAuth client for Google sign-in (steps in `PROGRESS.md`, Phase 01) |
