@@ -1,14 +1,59 @@
+import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadEnvConfig } from "@next/env";
 import { chromium } from "@playwright/test";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 
 const authDir = resolve("tests/e2e/.auth");
 const storageStatePath = resolve(authDir, "user.json");
 const devProjectUrl = "https://ptvdczmwkwqkxlintzri.supabase.co";
 const email = "playwright-meal-planner@local.test";
-const password = "Playwright-only-password-2026";
+
+type PendingCookie = {
+  name: string;
+  value: string;
+  options: CookieOptions;
+};
+
+function toPlaywrightCookie(
+  cookie: PendingCookie,
+  hostname: string,
+): {
+  name: string;
+  value: string;
+  domain: string;
+  path: string;
+  expires?: number;
+  httpOnly: boolean;
+  secure: boolean;
+  sameSite: "Strict" | "Lax" | "None";
+} {
+  const { options } = cookie;
+  const expires =
+    options.expires instanceof Date
+      ? Math.floor(options.expires.getTime() / 1000)
+      : options.maxAge === undefined
+        ? undefined
+        : Math.floor(Date.now() / 1000) + options.maxAge;
+
+  return {
+    name: cookie.name,
+    value: cookie.value,
+    domain: options.domain || hostname,
+    path: options.path || "/",
+    ...(expires === undefined ? {} : { expires }),
+    httpOnly: options.httpOnly ?? false,
+    secure: options.secure ?? false,
+    sameSite:
+      options.sameSite === true || options.sameSite === "strict"
+        ? "Strict"
+        : options.sameSite === "none"
+          ? "None"
+          : "Lax",
+  };
+}
 
 export default async function globalSetup() {
   loadEnvConfig(process.cwd());
@@ -27,6 +72,7 @@ export default async function globalSetup() {
       "Refusing E2E user provisioning outside the documented Supabase development project.",
     );
   }
+  const password = randomUUID();
 
   const admin = createClient(url, secretKey, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -41,7 +87,6 @@ export default async function globalSetup() {
     (
       await admin.auth.admin.createUser({
         email,
-        password,
         email_confirm: true,
       })
     ).data.user?.id;
@@ -52,13 +97,24 @@ export default async function globalSetup() {
   });
   if (updateError) throw updateError;
 
-  const browserClient = createClient(url, publishableKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
+  const pendingCookies: PendingCookie[] = [];
+  const browserClient = createServerClient(url, publishableKey, {
+    cookies: {
+      getAll() {
+        return [];
+      },
+      setAll(cookies) {
+        pendingCookies.push(...cookies);
+      },
+    },
   });
-  const { data, error: signInError } =
-    await browserClient.auth.signInWithPassword({ email, password });
-  if (signInError || !data.session)
-    throw signInError || new Error("No E2E session returned.");
+  const { error: signInError } = await browserClient.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (signInError) throw signInError;
+  if (!pendingCookies.length)
+    throw new Error("No E2E cookies returned from the SSR client.");
 
   mkdirSync(authDir, { recursive: true });
   const browser = await chromium.launch();
@@ -66,19 +122,9 @@ export default async function globalSetup() {
   const hostname = new URL(
     process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
   ).hostname;
-  const projectRef = new URL(url).hostname.split(".")[0];
-  const value = `base64-${Buffer.from(JSON.stringify(data.session)).toString("base64url")}`;
-  await context.addCookies([
-    {
-      name: `sb-${projectRef}-auth-token`,
-      value,
-      domain: hostname,
-      path: "/",
-      httpOnly: false,
-      secure: false,
-      sameSite: "Lax",
-    },
-  ]);
+  await context.addCookies(
+    pendingCookies.map((cookie) => toPlaywrightCookie(cookie, hostname)),
+  );
   await context.storageState({ path: storageStatePath });
   await browser.close();
 }
