@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { createClient } from "@/lib/supabase/server";
 
 async function SignedInRedirect() {
+  await connection();
   const supabase = await createClient();
   const {
     data: { user },
