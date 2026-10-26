@@ -97,7 +97,8 @@ The Supabase MCP server is connected to the **development project only**.
 - Use only `@supabase/ssr` helpers in `src/lib/supabase/`. Cookies use only `getAll`/`setAll`.
 - `src/proxy.ts` refreshes sessions; it is not authorization. Check the user again in every server action and protected page.
 - Every table has RLS enabled with explicit policies. No table is ever left without RLS.
-- The secret key is used only in `src/lib/supabase/admin.ts`, imported only by cron routes, guarded by `import "server-only"`.
+- The secret key is used only in `src/lib/supabase/admin.ts` (guarded by `import "server-only"`), and that module may be imported only by: (1) cron routes in `src/app/api/cron/`, (2) the account deletion server action (Phase 10).
+- Test-only exception: Playwright global setup in `tests/e2e/` may create its own admin client to provision a test user. It reads `SUPABASE_SECRET_KEY` from `.env.local` (or a CI secret), refuses to run unless `NEXT_PUBLIC_SUPABASE_URL` matches the dev project, and is never imported by anything in `src/`. In CI, authenticated e2e tests run only when that secret is configured; otherwise they are skipped with a clear message.
 
 **AI**
 - All LLM code lives in `src/lib/ai/` and starts with `import "server-only"`.

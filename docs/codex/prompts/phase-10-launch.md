@@ -12,7 +12,7 @@ The human does the dashboard parts; Codex does the code and writes a checklist f
 3. **Monitoring:** Sentry for Next.js (client, server, edge) with source maps; PostHog with events: `signed_up`, `onboarding_completed`, `plan_generated`, `night_swapped`, `plan_locked`, `grocery_item_checked`, `feedback_given`, `next_week_drafted`. Respect a cookie/consent setting if required.
 4. **Security pass:** run Supabase advisors; confirm no secret in client bundles (search build output); add security headers in `next.config.ts` (CSP report-only first); rate-limit auth-adjacent actions.
 5. **SEO and sharing:** metadata, Open Graph image, `robots.ts`, `sitemap.ts` for public pages.
-6. **Production checklist** in `docs/PROGRESS.md` for the human: create `meal-planner-prod` Supabase project, apply migrations with `supabase db push` (Supabase CLI), configure auth URLs and Google OAuth for the domain, set Vercel production env vars, connect the domain, verify Resend domain, set LLM spend limits.
+6. **Production checklist** in `docs/PROGRESS.md` for the human: create `meal-planner-prod` Supabase project, apply migrations with `supabase db push` (Supabase CLI), configure auth URLs and Google OAuth for the domain, set up Resend as custom SMTP in Supabase (required so any user can receive sign-in emails; the default sender only reaches organization members), then switch the magic link email template to the token-hash link for `/auth/confirm`, set Vercel production env vars, connect the domain, verify Resend domain, set LLM spend limits.
 
 ## Finish
 Update `docs/PROGRESS.md`. Commit. Manual test steps including a full new-user run on the production URL.

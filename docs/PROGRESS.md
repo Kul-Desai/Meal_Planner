@@ -4,13 +4,16 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 
 ## Current status
 
-- Current phase: **00 Setup**
-- Last merged phase: none
+- Current phase: **01 Foundation and auth**
+- Last merged phase: **00 Setup** (2026-10-26)
 - Blockers: none
 
 ## Human to-do (keys, dashboards, decisions)
 
-- [ ] Phase 00 checklist in `docs/README.md`
+- [x] Phase 00 checklist in `docs/README.md`
+- [ ] Phase 01: Google OAuth client. In Google Cloud Console, create or select a project; configure the OAuth consent screen with app name and support email; add `openid`, email, and profile scopes; create a Web application client; add `http://localhost:3000` and `https://meal-planner-kd.vercel.app` as Authorized JavaScript origins; copy the callback URL from Supabase Dashboard > Authentication > Providers > Google into Authorized redirect URIs; then paste the Google client ID and client secret into that Supabase provider and enable it.
+- [ ] Phase 01: add Vercel preview URL pattern to Supabase Redirect URLs after the first PR
+- [ ] Before public launch (Phase 10): custom SMTP (Resend + domain) in Supabase; until then sign-in emails reach only Supabase org members and templates cannot be edited (free projects created after 2026-06-03)
 
 ## Decisions log
 
@@ -30,6 +33,27 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 | 2026-10-26 | Nav: Plan (home), Groceries, Meals, Settings; Tonight is a card on Plan | Matches reference layout |
 
 ## Phase entries
+
+### Phase 01: Foundation and auth (2026-10-26)
+**Branch:** `phase-01-foundation`
+**Built:** Supabase SSR browser, server, and Next.js 16 proxy clients; email magic-link, Google OAuth, callback code exchange, token-hash confirmation, and sign-out flows; public landing, login, privacy, and terms routes; protected Plan, Today, Groceries, Meals, and Settings placeholders; responsive shell with the four approved nav items only (Today is protected but not navigated); shadcn/Radix primitives, responsive lime token theme, Prettier, Vitest, Playwright, and GitHub Actions CI.
+**Files touched (main ones):** `src/lib/supabase/`, `src/actions/auth.ts`, `src/app/(app)/`, `tests/`, `.github/workflows/ci.yml`.
+**New dependencies:** `@supabase/ssr`, `@supabase/supabase-js`, `zod`, `server-only`, shadcn/Radix dependencies, Prettier plus Tailwind plugin, Vitest, Playwright, `@next/env`, Supabase CLI.
+**Decisions:** Email uses Supabase's default PKCE magic-link flow to `/auth/callback?code=...`; `/auth/complete` safely handles the default-template fragment fallback; `/auth/confirm` is ready for the Phase 10 custom token-hash template. Per-user leaves explicitly call `connection()` inside Suspense so Next.js streams the static shell and does not prerender Supabase's time-dependent session validation. Playwright creates a password-based dev-only account only when dev credentials are present; the current signed-out redirect spec always runs.
+**Known issues / follow-ups:** The default Supabase sender only sends to organization members and permits two emails per hour. Test the live magic link with an organization-member inbox; the callback exchange and fragment fallback are implemented, but no inbox is available to automate that final click here. `npm run db:types` is implemented but requires a local Supabase CLI login or `SUPABASE_ACCESS_TOKEN`; no database schema exists until Phase 02. Google sign-in requires the dashboard setup above.
+**Manual test steps:**
+1. Run `npm run dev` and open `http://localhost:3000`; confirm the landing page's Get started button opens login.
+2. Use an organization-member email to request a magic link, then open it in the same browser; confirm it redirects to `/plan` and remains signed in after refresh.
+3. Open the link in a different browser; confirm login explains the PKCE limitation and offers a new link.
+4. After completing Google OAuth setup, select Continue with Google and confirm the callback lands on `/plan`.
+5. At 375px, confirm the bottom nav contains Plan, Groceries, Meals, Settings; at 1280px, confirm those same items appear in the sidebar; `/today` is reachable directly but does not appear in navigation.
+6. Open the account menu and select Sign out; confirm a visit to `/plan` returns to `/login`.
+
+### Phase 00: Setup (2026-10-26)
+**Built:** Next.js 16.4.3 + React 19.3 scaffold (`src/`, Tailwind v4, ESLint, React Compiler, Cache Components, Partial Prefetching); root `AGENTS.md` with project rules; 7 skills in `.agents/skills` (`skills-lock.json`); `agent-browser` 0.27.3.
+**Services:** GitHub `Kul-Desai/Meal_Planner`; Supabase dev project `meal-planner-dev` (ref `ptvdczmwkwqkxlintzri`) connected to Codex MCP (database, docs, development, debugging); Vercel project `chef_meal_planner` live at https://meal-planner-kd.vercel.app (env vars set: `NEXT_PUBLIC_*` as Config, `SUPABASE_SECRET_KEY` as Secret).
+**Supabase auth URLs:** Site URL `http://localhost:3000`; redirects `http://localhost:3000/**`, `https://meal-planner-kd.vercel.app/**`.
+**Known gaps:** no `typecheck`/`test` scripts yet (Phase 01).
 
 <!-- Template for Codex:
 ### Phase XX: Name (YYYY-MM-DD)

@@ -51,7 +51,7 @@ src/
       client.ts              # createBrowserClient
       server.ts              # createServerClient with await cookies()
       proxy.ts               # session refresh helper used by src/proxy.ts
-      admin.ts               # secret-key client, server-only, used by cron only
+      admin.ts               # secret-key client, server-only; cron routes + account deletion only
     ai/
       provider.ts            # picks model from env; "mock" provider for dev/tests
       schemas.ts             # Zod schemas for AI output
