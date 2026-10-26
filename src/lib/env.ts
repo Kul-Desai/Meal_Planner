@@ -11,7 +11,6 @@ const serverSchema = publicSchema.extend({
   AI_PROVIDER: z
     .enum(["mock", "openai", "anthropic", "gateway"])
     .default("mock"),
-  VERCEL_URL: z.string().min(1).optional(),
 });
 
 type EnvSource = Record<string, string | undefined>;
@@ -48,6 +47,5 @@ export function getServerEnv() {
     ...getPublicEnv(),
     SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY || undefined,
     AI_PROVIDER: process.env.AI_PROVIDER,
-    VERCEL_URL: process.env.VERCEL_URL,
   });
 }

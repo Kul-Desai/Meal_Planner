@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { headers } from "next/headers";
 import { getAuthCallbackUrl } from "@/lib/auth/redirect-url";
 import { createClient } from "@/lib/supabase/server";
 
@@ -23,9 +24,10 @@ export async function sendMagicLink(
   } = await supabase.auth.getUser();
   if (user) return { ok: true, data: { sent: false } };
 
+  const callbackUrl = getAuthCallbackUrl(await headers());
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
-    options: { emailRedirectTo: getAuthCallbackUrl() },
+    options: { emailRedirectTo: callbackUrl },
   });
   if (error)
     return { ok: false, error: "Could not send a link. Try again shortly." };
@@ -44,9 +46,10 @@ export async function beginGoogleSignIn(
   } = await supabase.auth.getUser();
   if (user) return { ok: true, data: { url: "/plan" } };
 
+  const callbackUrl = getAuthCallbackUrl(await headers());
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: parsed.data.provider,
-    options: { redirectTo: getAuthCallbackUrl() },
+    options: { redirectTo: callbackUrl },
   });
   if (error || !data.url) {
     return {
