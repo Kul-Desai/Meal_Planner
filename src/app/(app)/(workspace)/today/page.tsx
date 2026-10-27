@@ -1,10 +1,10 @@
 import { ProtectedPlaceholder } from "@/components/layout/protected-placeholder";
 
-export default function PlanPage() {
+export default function TodayPage() {
   return (
     <ProtectedPlaceholder
-      title="Plan"
-      description="Your dinner plan will appear here when you make one."
+      title="Tonight"
+      description="Tonight’s dinner will appear here."
     />
   );
 }

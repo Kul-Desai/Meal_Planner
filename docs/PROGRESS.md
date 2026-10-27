@@ -4,8 +4,8 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 
 ## Current status
 
-- Current phase: **02 Database and security** (ready for review)
-- Last merged phase: **01 Foundation and auth** (2026-10-26)
+- Current phase: **03 Onboarding, preferences, and timezone** (ready for review)
+- Last merged phase: **02 Database and security** (2026-10-26)
 - Blockers: none
 
 ## Human to-do (keys, dashboards, decisions)
@@ -33,8 +33,23 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 | 2026-10-26 | Nav: Plan (home), Groceries, Meals, Settings; Tonight is a card on Plan | Matches reference layout |
 | 2026-10-26 | Lean plan: Phases 03 Onboarding, 04 Plan + groceries, 05 Week + learning = MVP; photos, PWA/reminders, design polish, launch moved to Later; leftovers, pantry, cook mode, auto-draft deferred | Faster path to a usable app |
 | 2026-10-26 | Design as you build (no separate design phase); Codex plans once then builds, Claude reviews at phase end | Fewer rounds and stops |
+| 2026-10-26 | Web app only for now; desktop app later (installable PWA first) | Focus on a working web product before packaging |
 
 ## Phase entries
+
+### Phase 03: Onboarding, preferences, and timezone (2026-10-27)
+**Branch:** `phase-03-onboarding`
+**Built:** An eight-step onboarding flow for mood, cooking days, household, dietary needs, allergies, proteins, dislikes, and weekday/weekend time. It validates and saves preferences once, records the browser’s IANA timezone, and routes completed users to Plan. Settings now edits the same saved preferences, displays a DST-stable friendly timezone label (for example, “Eastern Time (New York)”), offers device-timezone adoption, shows the account email, and supports sign-out. Incomplete signed-in users are routed to onboarding; completed users cannot return there. The light lime design is now applied to onboarding, navigation, landing, and login, with responsive screenshots committed under `docs/design/screenshots/phase-03/`.
+**Files touched (main ones):** `src/actions/preferences.ts`, `src/config/preferences.ts`, `src/lib/preferences/`, `src/lib/validation/preferences.ts`, `src/components/preferences/`, `src/app/(app)/`, `supabase/migrations/20261027010716_backfill_auth_user_profiles_and_preferences.sql`, `supabase/tests/rls_user_isolation.sql`, `tests/`.
+**New dependencies:** none.
+**Decisions:** Existing Auth users are backfilled idempotently from `auth.users`; future rows remain exclusively trigger-created. Client actions update only the trigger-created rows, preserving the Phase 02 no-client-insert RLS model. Settings deliberately supports device-only timezone changes. The displayed timezone uses `Intl.DateTimeFormat` with `timeZoneName: "longGeneric"` plus the IANA city segment, while only the IANA ID is stored. Seven semantic mood tokens support later plan cards without hard-coded component colors.
+**Verification:** `npm run db:types`, `npm run db:test` (61 transaction-rolled-back pgTAP assertions), `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test` (10 tests), `npm run build`, and `npm run test:e2e` (2 tests) pass. Browser verification at 375px and 1280px confirms responsive navigation, completed-user Plan routing, Settings controls, the friendly timezone label, no console/runtime errors, and zero axe WCAG A/AA violations on Plan and Settings. Supabase security advisor retains only the accepted leaked-password-protection warning; performance advisor reports only expected unused-index notices on the new, unqueried catalog/foreign-key indexes.
+**Known issues / follow-ups:** The development project’s browser-timezone control only adopts the device/browser zone; manual selection is intentionally out of scope. Plan remains a placeholder until Phase 04.
+**Manual test steps:**
+1. Sign in with a new account or clear `profiles.onboarding_completed_at` for a development test user, then visit `/plan`; confirm redirection to `/onboarding`.
+2. Complete the eight questions, including a dietary choice that hides incompatible proteins and an optional custom dislike; choose **Plan my week** and confirm arrival at `/plan`.
+3. Open `/settings`; confirm answers are prefilled, the time zone reads in friendly form, **Use this device’s timezone** updates the pending setting, and **Save preferences** shows confirmation.
+4. Refresh `/plan`; confirm the completed user does not return to onboarding. At 375px confirm four bottom-nav items; at 1280px confirm the same four sidebar items.
 
 ### Phase 02: Database and security (2026-10-26)
 **Branch:** `phase-02-database`

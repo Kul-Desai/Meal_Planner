@@ -75,7 +75,11 @@ export function LoginForm() {
               We’ll send a sign-in link to this address.
             </FieldDescription>
           </Field>
-          <Button type="submit" disabled={pending} className="w-full">
+          <Button
+            type="submit"
+            disabled={pending}
+            className="min-h-12 w-full rounded-full font-bold"
+          >
             {pending
               ? "Sending…"
               : linkError
@@ -97,7 +101,7 @@ export function LoginForm() {
         variant="outline"
         onClick={onGoogleClick}
         disabled={pending}
-        className="w-full"
+        className="min-h-12 w-full rounded-full"
       >
         Continue with Google
       </Button>

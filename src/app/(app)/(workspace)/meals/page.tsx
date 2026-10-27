@@ -1,10 +1,10 @@
 import { ProtectedPlaceholder } from "@/components/layout/protected-placeholder";
 
-export default function SettingsPage() {
+export default function MealsPage() {
   return (
     <ProtectedPlaceholder
-      title="Settings"
-      description="Your meal preferences will appear here."
+      title="Meals"
+      description="Your saved meals will appear here."
     />
   );
 }

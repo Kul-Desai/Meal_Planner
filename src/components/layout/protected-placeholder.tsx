@@ -26,12 +26,12 @@ export function ProtectedPlaceholder({
   title,
   description,
 }: {
-  title: string;
+  title?: string;
   description: string;
 }) {
   return (
     <section>
-      <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+      {title && <h1 className="text-3xl font-bold tracking-tight">{title}</h1>}
       <Suspense fallback={<Skeleton className="mt-8 h-64 w-full" />}>
         <PrivateEmpty description={description} />
       </Suspense>

@@ -16,10 +16,12 @@ Each phase is one Codex task on its own branch, ending in a pull request. Codex 
 | Item | What |
 |------|------|
 | Later 1 | AI meal photos cached in ImageKit |
-| Later 2 | Installable app (PWA), offline grocery list, email and push reminders |
+| Later 2 | Desktop app via installable PWA (after the web app is complete), offline grocery list, email and push reminders |
 | Later 3 | Design polish pass |
 | Later 4 | Launch readiness: production project, domain, custom email sender, legal pages, account deletion, monitoring |
 | Also deferred | Leftovers helper, pantry staples, cook mode, weekly auto-draft, budget and cost per meal |
+
+Current focus: **web app only** (desktop and mobile browsers). Desktop app later.
 
 Dropped: Google Play (see `docs/archive/`).
 

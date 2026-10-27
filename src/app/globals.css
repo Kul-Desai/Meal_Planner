@@ -16,6 +16,13 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-mood-speedy: var(--mood-speedy);
+  --color-mood-lighter: var(--mood-lighter);
+  --color-mood-family: var(--mood-family);
+  --color-mood-comfort: var(--mood-comfort);
+  --color-mood-fakeaway: var(--mood-fakeaway);
+  --color-mood-gut: var(--mood-gut);
+  --color-mood-protein: var(--mood-protein);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -79,6 +86,13 @@
   --sidebar-accent-foreground: oklch(0.24 0.035 135);
   --sidebar-border: oklch(0.9 0.025 112);
   --sidebar-ring: oklch(0.66 0.16 126);
+  --mood-speedy: oklch(0.93 0.08 95);
+  --mood-lighter: oklch(0.92 0.07 165);
+  --mood-family: oklch(0.93 0.07 45);
+  --mood-comfort: oklch(0.92 0.06 75);
+  --mood-fakeaway: oklch(0.92 0.07 20);
+  --mood-gut: oklch(0.92 0.06 145);
+  --mood-protein: oklch(0.92 0.07 285);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -114,6 +128,13 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.79 0.17 126);
+    --mood-speedy: oklch(0.36 0.07 95);
+    --mood-lighter: oklch(0.35 0.06 165);
+    --mood-family: oklch(0.37 0.06 45);
+    --mood-comfort: oklch(0.36 0.05 75);
+    --mood-fakeaway: oklch(0.36 0.06 20);
+    --mood-gut: oklch(0.35 0.05 145);
+    --mood-protein: oklch(0.35 0.06 285);
   }
 }
 
@@ -126,5 +147,10 @@
   }
   html {
     @apply font-sans;
+    color-scheme: light dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button {
+    touch-action: manipulation;
   }
 }

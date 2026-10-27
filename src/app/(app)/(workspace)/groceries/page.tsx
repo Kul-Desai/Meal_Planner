@@ -4,7 +4,7 @@ export default function GroceriesPage() {
   return (
     <ProtectedPlaceholder
       title="Groceries"
-      description="Your combined list will appear after you lock in a plan."
+      description="Your combined grocery list will appear here."
     />
   );
 }

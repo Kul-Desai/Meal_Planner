@@ -1,5 +1,7 @@
 # Distribution: How People Get the App
 
+> **Current focus (2026-10-26): web app only.** People use it in a desktop or mobile browser at the live URL. The desktop app comes later, after the web app is complete; the planned route is the installable PWA in section 2 (Later 2), with a native desktop wrapper considered only if the PWA falls short.
+
 One Next.js codebase. Google Play was dropped on 2026-10-26, so the plan is the web app plus the installable PWA, with iOS as an optional later step.
 
 ## Summary

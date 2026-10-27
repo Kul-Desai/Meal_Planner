@@ -11,13 +11,19 @@ import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-5 py-12">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-5 py-12"
+    >
       <Link href="/" className="text-center text-lg font-bold tracking-tight">
         Meal Planner
       </Link>
-      <Card>
+      <Card className="border-border/80 shadow-sm">
         <CardHeader>
-          <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
+          <span className="bg-secondary text-secondary-foreground mb-2 w-fit rounded-full px-3 py-1 text-xs font-bold">
+            Your week, made easier
+          </span>
+          <h1 className="text-3xl font-bold tracking-tight">Sign in</h1>
           <CardDescription>
             Get a link in your email, or continue with Google.
           </CardDescription>

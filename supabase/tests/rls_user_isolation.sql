@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap;
-select plan(60);
+select plan(61);
 
 insert into auth.users (
   id, instance_id, aud, role, email, encrypted_password,
@@ -11,6 +11,24 @@ values
   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-a@meal-planner.test', '', now(), '{}', '{}', now(), now()),
   ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-b@meal-planner.test', '', now(), '{}', '{}', now(), now()),
   ('cccccccc-cccc-cccc-cccc-cccccccccccc', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-delete@meal-planner.test', '', now(), '{}', '{}', now(), now());
+
+select ok(
+  not exists (
+    select 1
+    from auth.users as auth_user
+    where not exists (
+      select 1
+      from public.profiles
+      where profiles.user_id = auth_user.id
+    )
+    or not exists (
+      select 1
+      from public.preferences
+      where preferences.user_id = auth_user.id
+    )
+  ),
+  'every auth user has a profile and preferences row'
+);
 
 insert into public.recipes (id, user_id, title, summary, minutes, base_servings, cuisine, mood_tag, steps, source, fingerprint)
 values (
