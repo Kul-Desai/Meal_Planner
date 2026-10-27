@@ -26,6 +26,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <a
+          href="#main-content"
+          className="bg-background text-foreground focus-visible:ring-ring sr-only fixed top-3 left-3 z-50 rounded-md px-3 py-2 text-sm font-semibold focus:not-sr-only focus-visible:ring-3"
+        >
+          Skip to main content
+        </a>
         {children}
         <Toaster />
       </body>

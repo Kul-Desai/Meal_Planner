@@ -13,4 +13,5 @@ export type PlanMeal = Tables<"plan_meals">;
 export type GroceryList = Tables<"grocery_lists">;
 export type GroceryItem = Tables<"grocery_items">;
 export type Preference = Tables<"preferences">;
+export type Profile = Tables<"profiles">;
 export type Recipe = Tables<"recipes">;

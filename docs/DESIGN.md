@@ -1,6 +1,6 @@
 # Design
 
-Status: **references collected and reviewed** (2026-10-26). See `design/REFERENCES.md` for what we take and skip from each screenshot. Styling work happens in Phase 08. Until then, Codex uses shadcn defaults and semantic tokens only, so the whole app can be reskinned by editing tokens.
+Status: **Phase 03 onboarding and preferences applied** (2026-10-27). See `design/REFERENCES.md` for what we take and skip from each screenshot. The remaining design work is polish around the weekly plan and food imagery, not a replacement of this direction.
 
 ## Workflow
 
@@ -8,7 +8,7 @@ Status: **references collected and reviewed** (2026-10-26). See `design/REFERENC
 2. **Write the brief (you, 10 minutes).** Fill in the "Brief" section below: three words for the feel, who it is for, and one thing it must never look like.
 3. **Design plan (Codex with `frontend-design` skill).** Codex reads the references and brief, proposes a token system (4 to 6 named colors, type families and scale, radius, spacing, motion) and ASCII wireframes for Plan home, Tonight view, Groceries. It reviews its own plan against the brief and revises anything generic.
 4. **Approve (you, with Claude).** Share the plan; we pick and adjust.
-5. **Apply (Codex with `shadcn` + `frontend-design`).** Update tokens in `globals.css`, adjust components, restyle screens one at a time, screenshot at 375px and 1280px.
+5. **Apply (Codex with `shadcn` + `frontend-design`).** Update tokens in `globals.css`, adjust components, restyle screens one at a time, screenshot at 375px and 1280px. Phase 03 established the onboarding, auth, navigation, and preference baseline.
 6. **Review (Codex with `web-design-guidelines`, then Claude).** Accessibility and UX audit, then fix.
 
 ## Brief (fill in before Phase 08)
@@ -33,18 +33,26 @@ Status: **references collected and reviewed** (2026-10-26). See `design/REFERENC
 
 From the `frontend-design` skill: avoid the warm-cream-plus-terracotta look, near-black with one neon accent, identical rounded cards with the same soft shadow everywhere, ALL-CAPS eyebrow labels over every heading, and numbered 01/02/03 markers on content that is not a sequence. Food apps also overuse orange-and-green "fresh" palettes and stock salad photos; push past those.
 
-## Tokens (filled in during Phase 08)
+## Tokens
 
 ```
---background:
---foreground:
---primary:
---primary-foreground:
---accent:
---muted:
---border:
---radius:
-font-display:
-font-body:
-type scale:
+--background: warm off-white
+--foreground: deep green-black
+--card: white
+--primary: lime green; used for actions, progress, selected states, and active nav
+--primary-foreground: deep green-black for readable lime buttons
+--secondary / --accent: pale lime surfaces
+--muted / --border: warm neutral surfaces and quiet separators
+--mood-speedy through --mood-protein: seven low-saturation mood surfaces
+--radius: 1.125rem base radius; cards and onboarding tiles use the semantic larger sizes
+font-display: Geist Sans, bold and compact
+font-body: Geist Sans
+type scale: 12–14px helpers, 16px body, 20px section labels, 30–48px task headings
 ```
+
+## Phase 03 interaction rules
+
+- Onboarding keeps one decision per screen: a large plain-language prompt, short helper, obvious selected state, Back button, progress bar, and a pinned minimum-44px Continue button.
+- Choice tiles, day buttons, chips, and steppers use real buttons with visible keyboard focus and `aria-pressed` state. Lime is never the only selected-state signal.
+- Settings groups the same choices into editable sections and saves with an explicit confirmation toast.
+- The app uses lime as a surface/action color, never low-contrast body text. Time zone labels are human-readable and DST-stable (for example, “Eastern Time (New York)”).

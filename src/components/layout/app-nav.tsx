@@ -31,7 +31,8 @@ export function AppNav({ mobile = false }: { mobile?: boolean }) {
               mobile
                 ? "flex-col gap-0.5 px-1 py-2 text-xs"
                 : "justify-start px-3",
-              active && "bg-accent text-accent-foreground",
+              active &&
+                "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
             )}
           >
             <Icon aria-hidden="true" className="size-5" />

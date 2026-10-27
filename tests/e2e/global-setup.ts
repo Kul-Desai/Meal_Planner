@@ -96,6 +96,11 @@ export default async function globalSetup() {
     email_confirm: true,
   });
   if (updateError) throw updateError;
+  const { error: resetError } = await admin
+    .from("profiles")
+    .update({ onboarding_completed_at: null, timezone: "UTC" })
+    .eq("user_id", userId);
+  if (resetError) throw resetError;
 
   const pendingCookies: PendingCookie[] = [];
   const browserClient = createServerClient(url, publishableKey, {
