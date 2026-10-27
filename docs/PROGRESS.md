@@ -33,6 +33,7 @@ Codex updates this file at the end of every phase. Newest entry on top. Claude r
 | 2026-10-26 | Nav: Plan (home), Groceries, Meals, Settings; Tonight is a card on Plan | Matches reference layout |
 | 2026-10-26 | Lean plan: Phases 03 Onboarding, 04 Plan + groceries, 05 Week + learning = MVP; photos, PWA/reminders, design polish, launch moved to Later; leftovers, pantry, cook mode, auto-draft deferred | Faster path to a usable app |
 | 2026-10-26 | Design as you build (no separate design phase); Codex plans once then builds, Claude reviews at phase end | Fewer rounds and stops |
+| 2026-10-26 | Web app only for now; desktop app later (installable PWA first) | Focus on a working web product before packaging |
 
 ## Phase entries
 

@@ -99,7 +99,7 @@ Reminders are not asked during onboarding; they are opt-in from Settings (Phase 
 
 ## Scope
 
-### v1 (MVP, lean plan: Phases 03 to 05)
+### v1 (MVP, lean plan: Phases 03 to 05): a web app for desktop and mobile browsers
 - Auth, onboarding, draft plan, swap a night, lock in, grocery list, tonight view, feedback, Meals tab, draft next week, settings.
 - Dinner only.
 - Responsive web app that works well on phone and desktop browsers.
